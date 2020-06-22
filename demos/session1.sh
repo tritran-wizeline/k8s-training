@@ -29,9 +29,17 @@ kubectl apply -f my-pod.yml
 # Deleting a pod
 kubectl delete po my-pod
 
-# Creating my-command-pod
-kubectl apply -f my-command-pod.yml
+# Getting namespaces
+kubectl get namespaces
+# Creating a namespace
+kubectl create ns my-ns
+# Creating my-ns-pod
+kubectl apply -f my-ns-pod.yml
+# Specifying a namespace
+kubectl get pods -n my-ns
+kubectl describe pod my-ns-pod -n my-ns
+
 # Creating my-args-pod
-kubectl apply -f my-args-pod.yml
+kubectl create -f my-args-pod.yml
 # Creating my-containerport-pod
-kubectl apply -f my-containerport-pod.yml
+kubectl create -f my-containerport-pod.yml
