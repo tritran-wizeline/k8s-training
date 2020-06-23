@@ -14,6 +14,16 @@ minikube stop
 # Starting Minikube again
 minikube start
 
+### AUTOCOMPLETE
+# setup autocomplete in bash into the current shell
+source <(kubectl completion bash)
+# add autocomplete permanently to your bash shell
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+
+# set alias k of kubectl
+alias k=kubectl
+complete -F __start_kubectl k
+
 # Get K8s objects
 kubectl api-resources
 # Getting pods in the cluster
