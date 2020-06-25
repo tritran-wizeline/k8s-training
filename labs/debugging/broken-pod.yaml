@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: auth-ws
+  namespace: candy-store
+spec:
+  containers:
+    - image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.4
+      imagePullPolicy: IfNotPresent
+      name: resource-consumer
+      resources: {}
+    - command:
+      - /bin/sh
+      - -c
+      - until curl localhost:8080/ConsumeCPU -d "millicores=200&durationSec=3600"; do
+        sleep 5; done && sleep 3700
+      image: radial/busyboxplus:curl
+      imagePullPolicy: IfNotPresent
+      name: busybox-sidecar
+      resources: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: build-svc
+  namespace: internal
+spec:
+  containers:
+    - image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.4
+      imagePullPolicy: IfNotPresent
+      name: resource-consumer
+      resources: {}
+
+---
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: candy-ws
+  namespace: candy-store
+spec:
+  containers:
+    - image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.4
+      imagePullPolicy: IfNotPresent
+      name: resource-consumer
+      resources: {}
+    - command:
+      - /bin/sh
+      - -c
+      - until curl localhost:8080/ConsumeCPU -d "millicores=100&durationSec=3600"; do
+        sleep 5; done && sleep 3700
+      image: radial/busyboxplus:curl
+      imagePullPolicy: IfNotPresent
+      name: busybox-sidecar
+      resources: {}
+
+---
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cart-ws
+  namespace: candy-store
+spec:
+  containers:
+    - image: linuxacademycontent/candy-service:2
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ealthz
+          port: 8081
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: cart-ws
+      resources: {}
+
+---
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: inventory-svc
+spec:
+  containers:
+  - image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.4
+    imagePullPolicy: IfNotPresent
+    name: resource-consumer
+    resources: {}
+
+---
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shipping-svc
+spec:
+  containers:
+  - image: gcr.io/kubernetes-e2e-test-images/resource-consumer:1.4
+    imagePullPolicy: IfNotPresent
+    name: resource-consumer
+    resources: {}  
